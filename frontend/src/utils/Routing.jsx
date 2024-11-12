@@ -5,6 +5,8 @@ import AdminDashboard from '../pages/AdminDashboard'
 import LoginPage from '../pages/LoginPage'
 import SignupPage from '../pages/SignupPage'
 import UserProfile from '../pages/UserProfile'
+import TasksPage from '../pages/TasksPage'
+import AdminDash from '../pages/AdminDash'
 
 const Routing = () => {
   return (
@@ -13,10 +15,11 @@ const Routing = () => {
 
       <Route path="/" element={<LandingPage />} />
       <Route path="/admindashboard" element={<AdminDashboard />} />
+      <Route path="/admindashboard/admin" element={<AdminDash />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/profile" element={<UserProfile />} />
-
+      <Route path="/profile/tasks" element={<TasksPage />} />
     </Routes>
   </>
   )

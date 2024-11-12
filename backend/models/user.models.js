@@ -28,19 +28,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    primaryDevice: {
-        deviceId: {
-            type: String,
-            required: true,
-        },
-        deviceName: {
-            type: String,
-            required: true,
-        },
-        lastLogin: {
-            type: Date,
-            required: true,
-        },
+    twoFactor: {
+        secret: String,
+        tempSecret: String,
+        dataURL: String,
+        otpURL: String,
+    },
+    isTwoFactorEnabled: {
+        type: Boolean,
+        default: false,
     },
     currentSession: {
         type: String,
@@ -74,11 +70,6 @@ const userValidationSchema = Joi.object({
     confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
         'any.only': 'Passwords must match',
     }),
-    primaryDevice: Joi.object({
-        deviceId: Joi.string().required(),
-        deviceName: Joi.string().required(),
-        lastLogin: Joi.date().required(),
-    }).required(),
     role: Joi.string().valid('user', 'admin').optional(),
 });
 

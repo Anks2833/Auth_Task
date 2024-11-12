@@ -25,7 +25,7 @@ const isAdmin = async (req, res, next) => {
         return res.status(401).json({ error: 'Access denied. No user found.' });
     }
 
-    
+
     if (req.user.role !== 'admin') {
         return res.status(403).json({ error: 'Access denied. User is not an admin.' });
     }

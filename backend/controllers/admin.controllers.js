@@ -20,12 +20,14 @@ const assignTask = async (req, res) => {
         const newTask = new adminModel({
             userId,
             taskDetails,
+            taskName
         });
 
         await newTask.save();
         res.status(201).json({
             message: 'Task assigned successfully',
             taskDetails,
+            taskName
         });
     } catch (err) {
         res.status(500).json({ error: 'Internal Server Error' });

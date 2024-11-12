@@ -6,6 +6,10 @@ const adminSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    taskName: {
+        type: String,
+        required: true
+    },
     taskDetails: {
         type: String,
         required: true
@@ -22,6 +26,7 @@ const adminModel = mongoose.model('Admin', adminSchema);
 
 const adminValidationSchema = Joi.object({
     userId: Joi.string().required(),
+    taskName: Joi.string().required(),
     taskDetails: Joi.string().required(),
     status: Joi.string().valid('assigned', 'in-progress', 'completed').optional(),
 });

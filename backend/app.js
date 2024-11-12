@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import session from 'express-session';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.routes.js';
 import adminRoutes from './routes/admin.routes.js';
@@ -17,7 +18,12 @@ connectDB()
     console.log("Error: ", err.message);
   });
 
-
+app.use(session({
+    secret: 'your_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 1800000 }
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
