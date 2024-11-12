@@ -4,6 +4,9 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 import { FaLongArrowAltLeft } from "react-icons/fa";
+import Bot_Model from '../components/Bot_Model';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -68,7 +71,15 @@ const LoginPage = () => {
         </NavLink>
       </div>
 
-      <div className="w-1/2 h-screen bg-[url('../../bus.jpg')] bg-cover bg-center bg-no-repeat"></div>
+      <div className="w-1/2 h-screen bg-zinc-800">
+        <Canvas style={{ height: '100%', width: '100%' }}>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+          <directionalLight position={[10, 10, 10]} intensity={1} />
+          <Bot_Model />
+          <OrbitControls />
+        </Canvas>
+      </div>
 
       <NavLink to="/" className="w-fit absolute top-8 left-8 text-white cursor-pointer flex items-center gap-2 text-sm">
         <FaLongArrowAltLeft />

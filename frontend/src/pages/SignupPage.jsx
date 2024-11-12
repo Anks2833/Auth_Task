@@ -4,6 +4,9 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { IoEyeSharp, IoEyeOffSharp } from "react-icons/io5";
 import { FaLongArrowAltLeft } from "react-icons/fa";
+import Bot_Model from '../components/Bot_Model';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 
 const SignupPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -21,13 +24,13 @@ const SignupPage = () => {
 
   const onSubmit = async (data) => {
     try {
-        const response = await axios.post('http://localhost:3000/api/v1/auth/signup', data);
-        localStorage.setItem('authToken', response.data.authToken);
-        navigate("/profile");
+      const response = await axios.post('http://localhost:3000/api/v1/auth/signup', data);
+      localStorage.setItem('authToken', response.data.authToken);
+      navigate("/profile");
     } catch (error) {
-        console.error('Signup Error:', error.response?.data || error.message);
+      console.error('Signup Error:', error.response?.data || error.message);
     }
-};
+  };
 
   return (
     <div className="w-full h-screen bg-zinc-300 flex">
@@ -71,7 +74,15 @@ const SignupPage = () => {
         </NavLink>
       </div>
 
-      <div className="w-1/2 h-screen bg-[url('../../bus.jpg')] bg-cover bg-center bg-no-repeat"></div>
+      <div className="w-1/2 h-screen bg-zinc-800">
+        <Canvas style={{ height: '100%', width: '100%' }}>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+          <directionalLight position={[10, 10, 10]} intensity={1} />
+          <Bot_Model />
+          <OrbitControls />
+        </Canvas>
+      </div>
 
       <NavLink to="/" className="w-fit absolute top-8 left-8 text-white cursor-pointer flex items-center gap-2 text-sm">
         <FaLongArrowAltLeft />
