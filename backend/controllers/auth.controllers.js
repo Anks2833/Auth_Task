@@ -48,12 +48,20 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    const { email, password, token } = req.body;
+    const { email, password, token, deviceId } = req.body;
 
     try {
         const user = await userModel.findOne({ email });
         if (!user || !await user.matchPassword(password)) {
             return res.status(401).json({ error: 'Invalid email or password' });
+        }
+
+        if (!user.primaryDevice) {
+            user.primaryDevice = deviceId;
+            await user.save();
+        } else if (user.primaryDevice !== deviceId) {
+            sendLoginRequest(user.primaryDevice, user._id, deviceId);
+            return res.status(202).json({ message: 'Login request sent to primary device for approval' });
         }
 
         if (user.isTwoFactorEnabled) {
@@ -137,4 +145,27 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-export { signup, login, enableTwoFactor, showUserProfile, getAllUsers };
+const approveDeviceLogin = async (req, res) => {
+    const { userId, newDeviceId, approve } = req.body;
+
+    try {
+        const user = await userModel.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if (approve) {
+            user.primaryDevice = newDeviceId;
+            const newAuthToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+            user.currentSession = newAuthToken;
+            await user.save();
+            res.status(200).json({ message: 'New device approved and updated', authToken: newAuthToken });
+        } else {
+            res.status(403).json({ message: 'Device approval rejected' });
+        }
+    } catch (err) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+export { signup, login, enableTwoFactor, showUserProfile, getAllUsers, approveDeviceLogin };

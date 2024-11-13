@@ -5,6 +5,8 @@ import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
 import { SiAuth0 } from "react-icons/si";
 import { IoIosLogOut } from "react-icons/io";
+import { RiAdminFill } from "react-icons/ri";
+import { FaUserAlt } from "react-icons/fa";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
@@ -46,6 +48,19 @@ const Navbar = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);
   };
@@ -73,11 +88,10 @@ const Navbar = () => {
 
       <div className="flex items-center gap-8 text-lg relative">
         {user ? (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <div
               className="w-10 h-10 border rounded-full overflow-hidden cursor-pointer"
               onClick={toggleDropdown}
-              ref={dropdownRef}
             >
               {user.profilePic ? (
                 <img
@@ -98,7 +112,17 @@ const Navbar = () => {
                   </div>
                   <h1>{user.firstName} {user.lastName}</h1>
                 </div>
-
+                {user.role === 'admin' ? (
+                  <NavLink to="/admindashboard" className="flex items-center gap-2 px-6 py-2 hover:bg-gray-300">
+                    <RiAdminFill />
+                    <h1>To AdminDashboard</h1>
+                  </NavLink>
+                ) : (
+                  <NavLink to="/profile" className="flex items-center gap-2 px-6 py-2 hover:bg-gray-300">
+                  <FaUserAlt />
+                  <h1>To Your Profile</h1>
+                </NavLink>
+                )}
                 <button
                   className="px-6 py-2 hover:bg-gray-300 hover:rounded-bl-md hover:rounded-br-md w-full flex items-center gap-2"
                   onClick={handleLogout}

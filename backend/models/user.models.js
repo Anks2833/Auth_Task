@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    primaryDevice: {
+        type: String,
+        default: null,
+    },
     currentSession: {
         type: String,
         default: null,
