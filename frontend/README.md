@@ -1,7 +1,7 @@
-# Project Title: 2FA with Single Device Access Control and Admin Dashboard
+# Frontend for 2FA with Single Device Access Control and Admin Dashboard
 
 ## Overview
-This project integrates Two-Factor Authentication (2FA) with single-device access control, enhancing security by ensuring that only one device per user is active at any time. The system includes an admin dashboard for managing user activities, assigning tasks, and controlling device access.
+This is the frontend part of the project that integrates Two-Factor Authentication (2FA) with single-device access control, enhancing security by ensuring that only one device per user is active at any time. The system includes an admin dashboard for managing user activities, assigning tasks, and controlling device access.
 
 ## Key Features
 - **User Authentication**: Secure signup and login processes with email and password.
@@ -44,16 +44,12 @@ This project integrates Two-Factor Authentication (2FA) with single-device acces
 ## Setup and Installation
 1. Clone the repository.
 2. Install dependencies using `npm install`.
-3. Start the development server using `npm start`.
-4. Ensure the backend server is running on `localhost:3000` or update the frontend configuration accordingly.
+3. Start the development server using `npm run dev`.
+4. Ensure the backend server is running on `localhost:5173` or update the frontend configuration accordingly.
 
 ## Technologies Used
 - **React**: For building the user interface.
 - **Axios**: Used for making API requests.
 - **React Router**: For handling routing.
 - **React Icons**: To enhance the UI with icons.
-
-## Future Enhancements
-- Implement more robust error handling and user feedback mechanisms.
-- Extend the admin dashboard with more features such as detailed analytics.
-- Improve mobile responsiveness across all components.
+- **React Three Fiber**: Used for adding 3D rendering capabilities to the React application.

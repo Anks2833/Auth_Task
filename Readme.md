@@ -1,7 +1,7 @@
 # 2FA with Single Device Access Control and Admin Dashboard
 
 ## Overview
-This system integrates Two-Factor Authentication (2FA) with single-device access control. When a user logs in on a new device, the primary device (where the user logged in first) receives a notification to approve or reject the login attempt. If approved, the new device becomes the primary, and the old device is automatically logged out. The admin dashboard enables administrators to manage user activity, assign tasks, and control device access.
+This system integrates Two-Factor Authentication (2FA) with single-device access control, enhancing security by ensuring that only one device per user is active at any time. The system includes an admin dashboard for managing user activities, assigning tasks, and controlling device access.
 
 ## Key Features
 
@@ -29,14 +29,14 @@ This system integrates Two-Factor Authentication (2FA) with single-device access
 - Admins can:
   - View a list of users and their current primary devices.
   - Monitor login activity and session details.
-  - Assign realty tasks or other assignments to users.
+  - Assign tasks or other assignments to users.
   - Revoke or change device access for specific users if necessary.
 
 ## Database Structure
 
 - **Users Collection**: Stores user information such as email, password, and the details of their primary device (device ID, device name, last login time).
 - **Login Attempts Collection**: Keeps track of login attempts, including device information, login status (pending, approved, rejected), and the time of the attempt.
-- **Admin Tasks Collection**: Records tasks assigned to users by the admin (e.g., realty tasks), including task details and status (assigned, in-progress, completed).
+- **Admin Tasks Collection**: Records tasks assigned to users by the admin, including task details and status (assigned, in-progress, completed).
 
 ## Backend Flow (Node.js, Express)
 
@@ -55,7 +55,7 @@ This system integrates Two-Factor Authentication (2FA) with single-device access
    - Admins can view users and manage device access through the dashboard.
    - Admins can assign tasks to users, manage tasks, and track progress.
 
-## Frontend Flow (React or Vue.js)
+## Frontend Flow (React)
 
 1. **Login Interface**:
    - Users input their email and password to log in.
