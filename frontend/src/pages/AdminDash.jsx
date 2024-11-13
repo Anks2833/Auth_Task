@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
 
 const AdminDash = () => {
     const [user, setUser] = useState(null);
     const [users, setUsers] = useState([]);
+    const [tasks, setTasks] = useState([]);
     const [active, setActive] = useState('viewUsers');
     const [inputName, setInputName] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [showTaskAssign, setShowTaskAssign] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+
+    const { register, handleSubmit, reset } = useForm();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -38,6 +42,42 @@ const AdminDash = () => {
         fetchUser();
         fetchUsers();
     }, []);
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            const config = {
+                headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+            };
+            try {
+                const { data } = await axios.get('http://localhost:3000/api/v1/admin/tasks', config);
+                setTasks(data);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        };
+
+        if (active === 'viewTasks') {
+            fetchTasks();
+        }
+    }, [active]);
+
+    const onSubmit = async (data) => {
+        const config = {
+            headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+        };
+        try {
+            await axios.post('http://localhost:3000/api/v1/admin/assign-task', {
+                userId: selectedUser._id,
+                taskName: data.taskName,
+                taskDetails: data.taskDetails
+            }, config);
+            setShowTaskAssign(false);
+            reset(); // Reset form fields
+            setActive('viewTasks'); // Switch to view tasks tab
+        } catch (error) {
+            console.error('Error assigning task:', error);
+        }
+    };
 
     const handleSetActive = (view) => {
         setActive(view);
@@ -118,22 +158,35 @@ const AdminDash = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="task-assignment-view text-white mt-10 w-[90vw] h-[60vh] border border-white rounded-xl flex flex-col gap-4 items-center justify-start pt-12">
+                    <form onSubmit={handleSubmit(onSubmit)} className="task-assignment-view text-white mt-10 w-[90vw] h-[60vh] border border-white rounded-xl flex flex-col gap-4 items-center justify-start pt-12">
                         <h2>Task Assignment for {selectedUser?.firstName} {selectedUser?.lastName}</h2>
-                        <input type="text" placeholder='Enter Task Title' className='w-[30vw] h-[5vh] bg-transparent border border-zinc-800 rounded-md text-white px-3' />
-                        <textarea placeholder='Enter Task Description' className='w-[30vw] h-[20vh] resize-none bg-transparent border border-zinc-800 rounded-md text-white px-3 py-2' />
+                        <input type="text" placeholder='Enter Task Title' className='w-[30vw] h-[5vh] bg-transparent border border-zinc-800 rounded-md text-white px-3' {...register('taskName', { required: true })} />
+                        <textarea placeholder='Enter Task Description' className='w-[30vw] h-[20vh] resize-none bg-transparent border border-zinc-800 rounded-md text-white px-3 py-2' {...register('taskDetails', { required: true })} />
                         <div className='flex justify-center gap-4'>
-                            <button className='w-[10vw] h-[5vh] bg-red-600 text-white rounded-md' onClick={handleBackToSearchResults}>Go Back</button>
-                            <button className='w-[10vw] h-[5vh] bg-blue-600 text-white rounded-md'>Assign</button>
+                            <button type="button" className='w-[10vw] h-[5vh] bg-red-600 text-white rounded-md' onClick={handleBackToSearchResults}>Go Back</button>
+                            <button type="submit" className='w-[10vw] h-[5vh] bg-blue-600 text-white rounded-md'>Assign</button>
                         </div>
-                    </div>
+                    </form>
                 )
             )}
 
             {active === 'viewTasks' && (
-                <div className="content text-white mt-10 w-[90vw] h-[60vh] border border-white rounded-xl flex justify-center pt-5">
-                    {/* Content for viewing tasks */}
-                    <p>Here you can view tasks.</p>
+                <div className="content text-white mt-10 w-[90vw] h-[60vh] border border-white rounded-xl flex flex-col items-center pt-5 overflow-auto">
+                    <h2 className="text-lg font-bold">Assigned Tasks</h2>
+
+                    <div className='w-full flex justify-between items-center px-10 my-4'>
+                        <h2 className="w-1/5 text-center">Name</h2>
+                        <h2 className="w-1/5 text-center">Task Name</h2>
+                        <h2 className="w-1/5 text-center">Task Description</h2>
+                    </div>
+
+                    {tasks.map(task => (
+                        <div key={task._id} className='w-full flex justify-between items-center px-10 py-4 border-t border-t-white'>
+                            <h2 className="w-1/5 text-center">{task.userId.firstName} {task.userId.lastName}</h2>
+                            <h2 className="w-1/5 text-center">{task.taskName}</h2>
+                            <h2 className="w-1/5 text-center">{task.taskDetails}</h2>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
